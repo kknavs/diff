@@ -1,0 +1,6 @@
+@DiffApplication_HostAddress = http://localhost:5084
+
+GET {{DiffApplication_HostAddress}}/diff/
+Accept: application/json
+
+###
