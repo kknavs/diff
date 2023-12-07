@@ -10,8 +10,4 @@
     <ProjectReference Include="..\DiffApplication.Domain\DiffApplication.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

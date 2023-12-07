@@ -1,8 +1,9 @@
-namespace DiffApplication
+namespace DiffApplication.Domain.Models
 {
     public class Diff
     {
-        public string? Data { get; set; }
+        public int Id { get; set; }
+        public required string Data { get; set; }
 
     }
 }
