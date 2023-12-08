@@ -12,6 +12,7 @@ namespace DiffApplication.Rest
         public AutoMapper() 
         {
             CreateMap<Diff, DiffViewModelPut>().ReverseMap();
+            CreateMap<Diff, DiffViewModelGet>();
             CreateMap<DiffResult, DiffResultViewModelGet>();
             CreateMap<DiffResult, DiffResultWithInfoViewModelGet>();
             CreateMap<DiffResultInfo, DiffResultInfoViewModelGet>();

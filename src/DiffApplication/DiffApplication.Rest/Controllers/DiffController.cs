@@ -12,7 +12,7 @@ namespace DiffApplication.Controllers
     /// Controller for diff actions. 
     /// </summary>
     [ApiController]
-    [Route("v1/[controller]")]
+    [Route("v1/diff")]
     public class DiffController : ControllerBase
     {
 
@@ -37,7 +37,7 @@ namespace DiffApplication.Controllers
         /// <param name="id">The ID of diff object.</param>
         /// <remarks>This endpoint is used to check diff of previously submitted data ('left' and 'right' diff object).</remarks>
         [HttpGet]
-        [Route("/{id}")]
+        [Route("{id}")]
         [Produces(MediaTypeNames.Application.Json)]
         public async Task <ActionResult<DiffResultViewModelGet>> GetDiffASync(int id)
         {
@@ -62,14 +62,16 @@ namespace DiffApplication.Controllers
         /// <param name="id">The ID of diff object.</param>
         /// <param name="diff">The diff object.</param>
         [HttpPut]
-        [Route("/{id}/left")]
+        [Route("{id}/left")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]    
-        public ActionResult PutLeftDiff(int id, DiffViewModelPut diff)
+        public IActionResult PutLeftDiff(int id, DiffViewModelPut diff)
         {
             var diffDomain = _mapper.Map<Diff>(diff);
             _diffRepository.PutDiff(id, diffDomain, Const.DiffType.Left);
-            return Created();
+
+            diffDomain.Id = id;
+            return Created("", _mapper.Map<DiffViewModelGet>(diffDomain));
         }
 
         // PUT /v1/diff/<ID>/right
@@ -79,14 +81,16 @@ namespace DiffApplication.Controllers
         /// <param name="id">The ID of diff object.</param>
         /// <param name="diff">The diff object.</param>
         [HttpPut]
-        [Route("/{id}/right")]
+        [Route("{id}/right")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
         public ActionResult PutRightDiff(int id, DiffViewModelPut diff)
         {
             var diffDomain = _mapper.Map<Diff>(diff);
             _diffRepository.PutDiff(id, diffDomain, Const.DiffType.Right);
-            return Created();
+
+            diffDomain.Id = id;
+            return Created("", _mapper.Map<DiffViewModelGet>(diffDomain));
         }
     }
 }
