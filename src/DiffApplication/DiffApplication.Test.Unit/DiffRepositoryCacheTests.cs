@@ -14,13 +14,26 @@ namespace DiffApplication.Test.Unit
         }
 
         [TestMethod]
-        public void TestMultipleSameDiffPutArguments()
+        public void TestUpdateSameDiff()
         {
-            var diff1 = new Diff() { Id = 1, Data = "AAA=" };
+            int id = 1;
+            var diff1 = new Diff() { Id = id, Data = "AAA=" };
 
-            _repo.PutDiff(1, diff1, Const.DiffType.Right);
-            _repo.PutDiff(1, diff1, Const.DiffType.Left);
-            _repo.PutDiff(1, diff1, Const.DiffType.Right);
+            _repo.PutDiff(id, diff1, Const.DiffType.Right);
+            var diff = _repo.GetDiff(id, Const.DiffType.Right);
+            Assert.IsNotNull(diff);
+            Assert.AreEqual(diff.Id, diff1.Id);
+            Assert.AreEqual(diff.Data, diff1.Data);
+
+            diff1.Data = "AAAAAA==";
+            _repo.PutDiff(id, diff1, Const.DiffType.Right);
+            diff = _repo.GetDiff(id, Const.DiffType.Right);
+            Assert.IsNotNull(diff);
+            Assert.AreEqual(diff.Id, diff1.Id);
+            Assert.AreEqual(diff.Data, diff1.Data);
+
+            diff = _repo.GetDiff(id, Const.DiffType.Left);
+            Assert.IsNull(diff);
         }
 
         // could add additional tests ...
