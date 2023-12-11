@@ -21,16 +21,17 @@ namespace DiffApplication.Infrastructure.Repositories
             return _leftDiffs;
         }
 
-        public Diff? GetDiff(int id, Const.DiffType type)
+        public Task<Diff?> GetDiffAsync(int id, Const.DiffType type)
         {
             var selectedDict = GetSelectedDict(type);
-            return selectedDict.GetValueOrDefault(id);
+            return Task.FromResult(selectedDict.GetValueOrDefault(id));
         }
 
-        public void PutDiff(int id, Diff diff, Const.DiffType type)
+        public Task PutDiffAsync(int id, Diff diff, Const.DiffType type)
         {
             var selectedDict = GetSelectedDict(type);
             selectedDict[id] = diff;
+            return Task.CompletedTask;
         }
     }
 }

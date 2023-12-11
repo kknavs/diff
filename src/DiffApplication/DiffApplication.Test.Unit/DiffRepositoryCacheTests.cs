@@ -14,25 +14,25 @@ namespace DiffApplication.Test.Unit
         }
 
         [TestMethod]
-        public void TestUpdateSameDiff()
+        public async Task TestUpdateSameDiffAsync()
         {
             int id = 1;
             var diff1 = new Diff() { Id = id, Data = "AAA=" };
 
-            _repo.PutDiff(id, diff1, Const.DiffType.Right);
-            var diff = _repo.GetDiff(id, Const.DiffType.Right);
+            await _repo.PutDiffAsync(id, diff1, Const.DiffType.Right);
+            var diff = await _repo.GetDiffAsync(id, Const.DiffType.Right);
             Assert.IsNotNull(diff);
             Assert.AreEqual(diff.Id, diff1.Id);
             Assert.AreEqual(diff.Data, diff1.Data);
 
             diff1.Data = "AAAAAA==";
-            _repo.PutDiff(id, diff1, Const.DiffType.Right);
-            diff = _repo.GetDiff(id, Const.DiffType.Right);
+            await _repo.PutDiffAsync(id, diff1, Const.DiffType.Right);
+            diff = await _repo.GetDiffAsync(id, Const.DiffType.Right);
             Assert.IsNotNull(diff);
             Assert.AreEqual(diff.Id, diff1.Id);
             Assert.AreEqual(diff.Data, diff1.Data);
 
-            diff = _repo.GetDiff(id, Const.DiffType.Left);
+            diff = await _repo.GetDiffAsync(id, Const.DiffType.Left);
             Assert.IsNull(diff);
         }
 

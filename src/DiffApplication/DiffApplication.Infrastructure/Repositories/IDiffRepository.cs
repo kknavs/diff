@@ -4,8 +4,8 @@ namespace DiffApplication.Infrastructure.Repositories
 {
     public interface IDiffRepository
     {
-        Diff? GetDiff(int id, Const.DiffType type);
+        Task<Diff?> GetDiffAsync(int id, Const.DiffType type);
 
-        void PutDiff(int id, Diff diff, Const.DiffType type);
+        Task PutDiffAsync(int id, Diff diff, Const.DiffType type);
     }
 }

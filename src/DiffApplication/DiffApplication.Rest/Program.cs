@@ -6,7 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IDiffResultCalculator, DiffResultCalculator>();
 
-builder.Services.AddTransient<IDiffRepository, DiffRepositoryCache>();
+var dbConfig = builder.Configuration["DBConnectionString"];
+if (string.IsNullOrEmpty(dbConfig))
+{
+    builder.Services.AddTransient<IDiffRepository, DiffRepositoryCache>();
+}
+else
+{
+    builder.Services.AddTransient<IDiffRepository, DiffRepositorySql>();
+}
 
 builder.Services.AddAutoMapper(typeof(Program));
 

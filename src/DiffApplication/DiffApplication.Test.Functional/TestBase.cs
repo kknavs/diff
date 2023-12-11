@@ -9,6 +9,13 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net;
 using System.Text.Json;
 using System.Net.Mime;
+using DiffApplication.Infrastructure.Repositories;
+using DiffApplication.Domain.Models;
+using System.Transactions;
+using System.Data.SqlClient;
+using System.Data;
+using Dapper;
+using System.Transactions;
 
 namespace DiffApplication.Test.Functional
 {
@@ -28,9 +35,15 @@ namespace DiffApplication.Test.Functional
             Configuration = new ConfigurationBuilder()
               .AddJsonFile(Path.Combine(appPath, "appsettings.json"))
               .AddJsonFile(Path.Combine(appPath, "appsettings.test.json"), optional: true)
-              .AddJsonFile(Path.Combine(appPath, "appsettings.test.functional.development.json"), optional: true)
+              .AddJsonFile(Path.Combine(appPath, "appsettings.test.functional.json"), optional: true)
               .AddEnvironmentVariables()
               .Build();
+
+            var dbConfig = Configuration["DBConnectionString"];
+            if (!string.IsNullOrEmpty(dbConfig))
+            {
+                PrepareDB(dbConfig!);
+            }
 
             server = CreateServer(appPath);
 
@@ -77,6 +90,19 @@ namespace DiffApplication.Test.Functional
             }
 
             return requestMessage;
+        }
+
+        private static void PrepareDB(string connectionString)
+        {
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+            
+            string truncate = "TRUNCATE TABLE LeftDiff; TRUNCATE TABLE RightDiff;";
+            connection.Execute(truncate, new(),transaction);
+
+            transaction.Commit();
+            connection.Close();
         }
 
         protected async Task<HttpResponseMessage> PerformRequestAsync(HttpClient client, HttpMethod httpMethod, string uri, HttpContent? content = null)

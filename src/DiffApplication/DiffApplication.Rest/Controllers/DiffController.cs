@@ -39,10 +39,10 @@ namespace DiffApplication.Controllers
         [HttpGet]
         [Route("{id}")]
         [Produces(MediaTypeNames.Application.Json)]
-        public async Task <ActionResult<DiffResultViewModelGet>> GetDiffASync(int id)
+        public async Task <ActionResult<DiffResultViewModelGet>> GetDiffAsync(int id)
         {
-            var leftDiff = _diffRepository.GetDiff(id, Const.DiffType.Left);
-            var rightDiff = _diffRepository.GetDiff(id, Const.DiffType.Right);
+            var leftDiff = await _diffRepository.GetDiffAsync(id, Const.DiffType.Left);
+            var rightDiff = await _diffRepository.GetDiffAsync(id, Const.DiffType.Right);
             if (leftDiff == null || rightDiff == null)
             {
                 return NotFound();
@@ -65,10 +65,10 @@ namespace DiffApplication.Controllers
         [Route("{id}/left")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]    
-        public IActionResult PutLeftDiff(int id, DiffViewModelPut diff)
+        public async Task<IActionResult> PutLeftDiff(int id, DiffViewModelPut diff)
         {
             var diffDomain = _mapper.Map<Diff>(diff);
-            _diffRepository.PutDiff(id, diffDomain, Const.DiffType.Left);
+            await _diffRepository.PutDiffAsync(id, diffDomain, Const.DiffType.Left);
 
             diffDomain.Id = id;
             return Created("", _mapper.Map<DiffViewModelGet>(diffDomain));
@@ -84,10 +84,10 @@ namespace DiffApplication.Controllers
         [Route("{id}/right")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
-        public ActionResult PutRightDiff(int id, DiffViewModelPut diff)
+        public async Task<IActionResult> PutRightDiff(int id, DiffViewModelPut diff)
         {
             var diffDomain = _mapper.Map<Diff>(diff);
-            _diffRepository.PutDiff(id, diffDomain, Const.DiffType.Right);
+            await _diffRepository.PutDiffAsync(id, diffDomain, Const.DiffType.Right);
 
             diffDomain.Id = id;
             return Created("", _mapper.Map<DiffViewModelGet>(diffDomain));
